@@ -1,0 +1,28 @@
+{
+    "name": "sam10/payroll-api",
+    "description": "SAM10 - Serverless Payroll Management API (PHP + Bref + AWS Lambda)",
+    "type": "project",
+    "require": {
+        "php": ">=8.2",
+        "bref/bref": "^3.0",
+        "dompdf/dompdf": "^3.1",
+        "aws/aws-sdk-php": "^3.300"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "scripts": {
+        "pre-autoload-dump": "Aws\\Script\\Composer\\Composer::removeUnusedServices"
+    },
+    "extra": {
+        "aws/aws-sdk-php": [
+            "S3"
+        ]
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    }
+}

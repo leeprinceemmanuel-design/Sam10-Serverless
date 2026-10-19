@@ -1,0 +1,44 @@
+# SAM10 - Serverless Payroll Management API
+# Deploy with:  serverless deploy
+
+# !!! CHANGE THIS: must be unique in the class AWS account (lowercase, no spaces)
+service: sam10-payroll-yourname
+
+custom:
+    # !!! CHANGE THIS: the S3 bucket you created for the payslip PDFs
+    payslipBucket: sam10-payslips-yourname
+
+provider:
+    name: aws
+    region: ap-southeast-1 # Singapore. Use the same region as your S3 bucket.
+    environment:
+        APP_ENV: prod
+        PAYSLIP_BUCKET: ${self:custom.payslipBucket}
+    iam:
+        role:
+            statements:
+                # Least privilege: the Lambda can ONLY upload files into payslips/ in this bucket
+                - Effect: Allow
+                  Action:
+                      - s3:PutObject
+                  Resource: arn:aws:s3:::${self:custom.payslipBucket}/payslips/*
+
+functions:
+    web:
+        handler: public/index.php
+        runtime: php-84-fpm
+        timeout: 28 # API Gateway max is 29 seconds
+        memorySize: 1024 # more memory = faster PDF generation
+        events:
+            - httpApi: '*'
+
+package:
+    patterns: # Exclude files from deployment
+        - '!node_modules/**'
+        - '!tests/**'
+        - '!.git/**'
+        - '!screenshots/**'
+        - '!*.md'
+
+plugins:
+    - ./vendor/bref/bref

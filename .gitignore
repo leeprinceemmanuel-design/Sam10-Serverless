@@ -1,0 +1,6 @@
+/vendor/
+/node_modules/
+/.serverless/
+/local-output/
+.env
+.DS_Store
